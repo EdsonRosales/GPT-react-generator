@@ -1,5 +1,6 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { menuRoutes } from "../router/router";
+import { SidebarMenuItem } from "../components";
 
 export const DashboardLayout = () => {
   return (
@@ -12,24 +13,10 @@ export const DashboardLayout = () => {
 
         <div className="border-gray-700 border my-3" />
 
-        {/* Opciones del menú */}
+        {/* Menu options */}
         {
           menuRoutes.map((route) => (
-            <NavLink
-              key={route.to}
-              to={route.to}
-              className={({ isActive }) =>
-                isActive
-                  ? 'flex justify-center items-center bg-gray-800 rounded-md p-2 transition-colors'
-                  : 'flex justify-center items-center hover:bg-gray-800 rounded-md p-2 transition-colors'
-              }
-            >
-              <i className={`${route.icon} text-2xl mr-4 text-indigo-400`}></i>
-              <div className="flex flex-col flex-grow">
-                <span className="text-white text-lg font-semibold">{route.title}</span>
-                <span className="text-gray-400 text-sm">{route.description}</span>
-              </div>
-            </NavLink>
+            <SidebarMenuItem key={route.to} {...route} />
           ))
         }
         
