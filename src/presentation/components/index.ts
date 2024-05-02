@@ -4,6 +4,7 @@ export * from "./chat-bubbles/MyMessage"
 
 // Chat Inputs Boxes Exports
 export * from "./chat-input-boxes/TextMessageBox"
+export * from "./chat-input-boxes/TextMessageBoxFile"
 
 // Loaders Exports
 export * from "./loaders/TypingLoader"
