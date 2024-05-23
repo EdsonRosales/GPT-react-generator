@@ -20,20 +20,23 @@ export const prosConsStreamUseCase = async ( prompt: string ) => {
       return null;
     }
 
+    return reader;
+
     // To decode the reader
-    const decoder = new TextDecoder();
-    let text = '';
+    // const decoder = new TextDecoder();
 
-    while(true) {
-      const { value, done } = await reader.read();
-      if (done) {
-        break;
-      }
+    // let text = '';
 
-      const decodedChunk = decoder.decode(value, { stream: true });
-      text += decodedChunk;
-      console.log(text);
-    }
+    // while(true) {
+    //   const { value, done } = await reader.read();
+    //   if (done) {
+    //     break;
+    //   }
+
+    //   const decodedChunk = decoder.decode(value, { stream: true });
+    //   text += decodedChunk;
+    //   console.log(text);
+    // }
 
   } catch (error) {
     console.error(error);
