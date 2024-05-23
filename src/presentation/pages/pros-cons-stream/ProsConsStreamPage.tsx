@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
-import { prosConsStreamUseCase } from "../../../core/use-cases";
+import { 
+  prosConsStreamFunctionGeneratorUseCase,
+  // prosConsStreamUseCase
+} from "../../../core/use-cases";
 
 export type Message = {
   text: string;
@@ -16,29 +19,42 @@ export const ProsConsStreamPage = () => {
     setIsLoading(true);
     setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
 
-    const reader = await prosConsStreamUseCase(text);
-    
-    if (!reader) return alert('No se pudo generar el reader');
+    const stream = await prosConsStreamFunctionGeneratorUseCase(text);
+    setIsLoading(false);
 
-    // Generate the last message
-    const decoder = new TextDecoder();
-    let message = '';
-    setMessages((messages) => [...messages, { text: message, isGptMessage: true }])
+    setMessages((messages) => [...messages, { text: '', isGptMessage: true }]);
 
-    while(true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const decodedChunk = decoder.decode(value, { stream: true });
-      message += decodedChunk;
-
-      // Update the last message as OpenAI emits the messages of his response
+    for await (const text of stream) {
       setMessages((messages) => {
         const newMessages = [...messages];
-        newMessages[newMessages.length - 1].text = message;
+        newMessages[newMessages.length - 1].text = text;
         return newMessages;
       })
     }
+
+    // const reader = await prosConsStreamUseCase(text);
+    
+    // if (!reader) return alert('No se pudo generar el reader');
+
+    // // Generate the last message
+    // const decoder = new TextDecoder();
+    // let message = '';
+    // setMessages((messages) => [...messages, { text: message, isGptMessage: true }])
+
+    // while(true) {
+    //   const { done, value } = await reader.read();
+    //   if (done) break;
+
+    //   const decodedChunk = decoder.decode(value, { stream: true });
+    //   message += decodedChunk;
+
+    //   // Update the last message as OpenAI emits the messages of his response
+    //   setMessages((messages) => {
+    //     const newMessages = [...messages];
+    //     newMessages[newMessages.length - 1].text = message;
+    //     return newMessages;
+    //   })
+    // }
   };
   
   return (
