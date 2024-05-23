@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
 import { 
   prosConsStreamFunctionGeneratorUseCase,
@@ -11,15 +11,25 @@ export type Message = {
 };
 
 export const ProsConsStreamPage = () => {
+
+  // Ref to the abortcontroller
+  const abortController = useRef(new AbortController);
+  const isRunning = useRef(false);
   
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const handlePost = async (text: string) => {
+    if (isRunning.current) {
+      abortController.current.abort();
+      abortController.current = new AbortController();  // <---- To prevent the cancellation of the new request
+    }
+
     setIsLoading(true);
+    isRunning.current = true;
     setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
 
-    const stream = await prosConsStreamFunctionGeneratorUseCase(text);
+    const stream = prosConsStreamFunctionGeneratorUseCase(text, abortController.current.signal);
     setIsLoading(false);
 
     setMessages((messages) => [...messages, { text: '', isGptMessage: true }]);
@@ -32,29 +42,7 @@ export const ProsConsStreamPage = () => {
       })
     }
 
-    // const reader = await prosConsStreamUseCase(text);
-    
-    // if (!reader) return alert('No se pudo generar el reader');
-
-    // // Generate the last message
-    // const decoder = new TextDecoder();
-    // let message = '';
-    // setMessages((messages) => [...messages, { text: message, isGptMessage: true }])
-
-    // while(true) {
-    //   const { done, value } = await reader.read();
-    //   if (done) break;
-
-    //   const decodedChunk = decoder.decode(value, { stream: true });
-    //   message += decodedChunk;
-
-    //   // Update the last message as OpenAI emits the messages of his response
-    //   setMessages((messages) => {
-    //     const newMessages = [...messages];
-    //     newMessages[newMessages.length - 1].text = message;
-    //     return newMessages;
-    //   })
-    // }
+    isRunning.current = false;
   };
   
   return (

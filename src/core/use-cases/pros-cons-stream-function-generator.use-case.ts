@@ -1,12 +1,12 @@
-export async function* prosConsStreamFunctionGeneratorUseCase ( prompt: string ) {
+export async function* prosConsStreamFunctionGeneratorUseCase ( prompt: string, abortSignal: AbortSignal ) {
   try {
     const resp = await fetch(`${import.meta.env.VITE_GPT_API}/orthography-check`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ prompt })
-      // TO DO: abortSignal
+      body: JSON.stringify({ prompt }),
+      signal: abortSignal,
     });
     
     if ( !resp.ok ) throw new Error('No se pudo realizar la comparación');
