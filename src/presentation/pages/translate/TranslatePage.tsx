@@ -73,6 +73,7 @@ export const TranslatePage = () => {
       <TextMessageBoxSelect
         onSendMessage={ handlePost }
         placeholder="Comienza a escribir..."
+        selectPlaceholder="Selecciona un idioma"
         options={languages}
       />
 
