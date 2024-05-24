@@ -1,10 +1,21 @@
 import { useState } from "react";
-import { GptMessage, MyMessage, TextMessageBoxSelect, TypingLoader } from "../../components";
+import { GptMessage, GptMessageAudio, MyMessage, TextMessageBoxSelect, TypingLoader } from "../../components";
+import { textToAudioUseCase } from "../../../core/use-cases";
 
-export type Message = {
+export type TextMessage = {
   text: string;
   isGptMessage: boolean;
+  type: 'text';
 };
+
+export type AudioMessage = {
+  text: string;
+  isGptMessage: boolean;
+  audio: string;
+  type: 'audio'
+};
+
+type Message = TextMessage | AudioMessage;
 
 const disclaimer = `
   ## Hola, ¿Qué audio te gustaría generar?
@@ -27,13 +38,17 @@ export const TextToAudioPage = () => {
 
   const handlePost = async (text: string, selectedVoice: string) => {
     setIsLoading(true);
-    setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
+    setMessages( (prev) => [...prev, { text, isGptMessage: false, type: 'text' }] );
 
-    // TO DO: Call to the matching Use Case
-    
+    const { ok, message, audioUrl } = await textToAudioUseCase(text, selectedVoice);
     setIsLoading(false);
 
-    // TO DO: Add the isGPTMessage in true
+    if (!ok) {
+      alert('No se pudo generar el audio');
+      throw new Error('No se pudo generar el audio')
+    }
+
+    setMessages( (prev) => [...prev, { text: `${selectedVoice} - ${message}`, isGptMessage: true, type: 'audio', audio: audioUrl! }] );
   };
   
   return (
@@ -48,7 +63,16 @@ export const TextToAudioPage = () => {
             messages.map( (message, index) => (
               message.isGptMessage
                 ? (
-                  <GptMessage text={message.text} key={index} />
+                  message.type === 'audio'
+                  ? (
+                    <GptMessageAudio
+                      key={index}
+                      text={message.text}
+                      audio={message.audio}
+                    />
+                  ) : (
+                    <GptMessage text={message.text} key={index} />
+                  )
                 ) : (
                   <MyMessage text={message.text} key={index} />
                 )
