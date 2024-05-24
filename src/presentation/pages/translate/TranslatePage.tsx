@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { GptMessage, MyMessage, TextMessageBoxSelect, TypingLoader } from "../../components";
+import { translateTextUseCase } from "../../../core/use-cases";
 
 export type Message = {
   text: string;
@@ -28,14 +29,15 @@ export const TranslatePage = () => {
     setIsLoading(true);
 
     const newMessage = `Traduce: "${text}" al idioma ${selectedOption}`;
-
     setMessages( (prev) => [...prev, { text: newMessage, isGptMessage: false }] );
-
-    // TO DO: Call to the matching Use Case
+    
+    const { ok, message } = await translateTextUseCase(text, selectedOption)
     
     setIsLoading(false);
-
-    // TO DO: Add the isGPTMessage in true
+    
+    if (!ok) return alert(message);
+    
+    setMessages( (prev) => [...prev, { text: message, isGptMessage: true }] );
   };
   
   return (
