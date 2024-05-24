@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 type TextMessageBoxProps = {
   onSendMessage: (message: string, selectedOption: string) => void;
   placeholder?: string;
+  selectPlaceholder?: string;
   disableCorrections?: boolean;
   options: Option[]
 };
@@ -12,7 +13,7 @@ type Option = {
   text: string;
 };
 
-export const TextMessageBoxSelect = ({ onSendMessage, disableCorrections = false, placeholder, options }: TextMessageBoxProps) => {
+export const TextMessageBoxSelect = ({ onSendMessage, disableCorrections = false, placeholder, selectPlaceholder, options }: TextMessageBoxProps) => {
 
   const [message, setMessage] = useState('');
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -52,7 +53,7 @@ export const TextMessageBoxSelect = ({ onSendMessage, disableCorrections = false
             value={ selectedOption }
             onChange={ e => setSelectedOption(e.target.value) }
           >
-            <option value=''>{"Seleccione una opción"}</option>
+            <option value=''>{ selectPlaceholder }</option>
             {
               options.map(({ id, text }) => (
                 <option key={id} value={id}>{text}</option>
