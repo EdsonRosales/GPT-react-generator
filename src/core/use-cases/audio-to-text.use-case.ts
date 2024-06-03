@@ -1,29 +1,24 @@
+import { AudioToTextResponse } from "../../interfaces";
+
 export const audioToTextUseCase = async ( audioFile: File, prompt?: string ) => {
   try {
-    console.log({ audioFile, prompt });
-    // const resp = await fetch(`${import.meta.env.VITE_GPT_API}/audio-to-text`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ prompt })
-    // });
+    const formData = new FormData();
+    formData.append('file', audioFile);
+    if (prompt) {
+      formData.append('prompt', prompt);
+    }
+
+    const resp = await fetch(`${import.meta.env.VITE_GPT_API}/audio-to-text`, {
+      method: 'POST',
+      body: formData
+    });
     
-    // if ( !resp.ok ) throw new Error('No se pudo realizar la correción');
+    const data = await resp.json() as AudioToTextResponse;
 
-    // const data = await resp.json() as OrthographyResponse;
-
-    // return {
-    //   ok: true,
-    //   ...data,
-    // }
+    return data;
 
   } catch (error) {
-    // return {
-    //   ok: false,
-    //   userScore: 0,
-    //   errors: [],
-    //   message: 'No se pudo realizar la corrección'
-    // }
+    console.log(error);
+    return null;
   }
 }

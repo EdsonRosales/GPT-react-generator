@@ -16,11 +16,12 @@ export const AudioToTextPage = () => {
     setIsLoading(true);
     setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
 
-    await audioToTextUseCase(audioFile, text);
-    
+    const resp = await audioToTextUseCase(audioFile, text);
     setIsLoading(false);
 
-    // TO DO: Add the isGPTMessage in true
+    if (!resp) return;
+
+    console.log({resp});
   };
   
   return (
