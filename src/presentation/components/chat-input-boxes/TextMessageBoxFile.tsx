@@ -1,7 +1,7 @@
 import { FormEvent, useRef, useState } from "react";
 
 type TextMessageBoxProps = {
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string, file: File) => void;
   placeholder?: string;
   disableCorrections?: boolean;
   acceptedFiles?: string;
@@ -18,9 +18,12 @@ export const TextMessageBoxFile = ({ onSendMessage, disableCorrections = false, 
   const handleSendMessage = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if(message.trim().length === 0) return;
-    onSendMessage(message);
+    // if(message.trim().length === 0) return;
+    if (!selectedFile) return;
+
+    onSendMessage(message, selectedFile);
     setMessage('');
+    setSelectedFile(null);
   };
 
   return (
