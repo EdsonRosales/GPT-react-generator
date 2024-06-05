@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { useState } from "react";
-import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
+import { GptMessage, GptMessageImage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
 import { imageGenerationUseCase } from "../../../core/use-cases";
 
 export type Message = {
@@ -26,7 +27,17 @@ export const ImageGenerationPage = () => {
 
     if (!imageInfo) return setMessages((prev) => [...prev, { text: 'No se pudo generar la imagen', isGptMessage: true }]);
 
-    // TO DO: Add the isGPTMessage in true
+    setMessages((prev) => [
+      ...prev,
+      {
+        text,
+        isGptMessage: true,
+        info: {
+          imageUrl: imageInfo.url,
+          alt: imageInfo.alt
+        }
+      }
+    ])
   };
   
   return (
@@ -41,7 +52,12 @@ export const ImageGenerationPage = () => {
             messages.map( (message, index) => (
               message.isGptMessage
                 ? (
-                  <GptMessage text={message.text} key={index} />
+                  <GptMessageImage 
+                    text={message.text}
+                    key={index}
+                    imageUrl={message.info?.imageUrl!}
+                    alt={message.info?.alt!}
+                  />
                 ) : (
                   <MyMessage text={message.text} key={index} />
                 )
