@@ -6,3 +6,4 @@ export * from './pros-cons-stream-function-generator.use-case';
 export * from './translate-text.use-case';
 export * from './text-to-audio.use-case';
 export * from './audio-to-text.use-case';
+export * from './image-genertion.use-case';
