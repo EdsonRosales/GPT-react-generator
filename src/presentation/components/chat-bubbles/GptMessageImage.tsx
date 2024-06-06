@@ -3,9 +3,10 @@ type GptMessageImageProps = {
   text: string;
   imageUrl: string;
   alt: string;
+  onImageSelected?: (imageUrl: string) => void;
 };
 
-export const GptMessageImage = ({ imageUrl, alt }: GptMessageImageProps) => {
+export const GptMessageImage = ({ imageUrl, alt, onImageSelected }: GptMessageImageProps) => {
   return (
     <div className="col-start-1 col-end-8 p-3 rounded-lg">
       <div className="flex flex-row items-start">
@@ -17,6 +18,7 @@ export const GptMessageImage = ({ imageUrl, alt }: GptMessageImageProps) => {
             src={imageUrl}
             alt={alt}
             className="rounded-xl w-96 h-96 object-cover"
+            onClick={() => onImageSelected && onImageSelected(imageUrl)}
           />
         </div>
       </div>

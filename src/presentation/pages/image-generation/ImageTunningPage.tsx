@@ -15,7 +15,16 @@ export type Message = {
 export const ImageTunningPage = () => {
   
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      isGptMessage: true,
+      text: 'Imagen base',
+      info: {
+        alt: 'Imagen base',
+        imageUrl: 'http://localhost:3000/gpt/image-generation/1703785193790.png'
+      }
+    }
+  ]);
 
   const [originalImageAndMask, setOriginalImageAndMask] = useState({
     original: undefined as string | undefined,
@@ -96,6 +105,10 @@ export const ImageTunningPage = () => {
                       key={index}
                       imageUrl={message.info?.imageUrl!}
                       alt={message.info?.alt!}
+                      onImageSelected={ (url) => setOriginalImageAndMask({
+                        original: url,
+                        mask: undefined
+                      })}
                     />
                   ) : (
                     <MyMessage text={message.text} key={index} />
