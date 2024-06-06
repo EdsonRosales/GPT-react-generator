@@ -55,8 +55,10 @@ export const ImageTunningPage = () => {
     setIsLoading(true);
     setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
 
+    const { original, mask } = originalImageAndMask;
+
     // Call to the matching Use Case
-    const imageInfo = await imageGenerationUseCase(text);
+    const imageInfo = await imageGenerationUseCase(text, original, mask);
     setIsLoading(false);
 
     if (!imageInfo) return setMessages((prev) => [...prev, { text: 'No se pudo generar la imagen', isGptMessage: true }]);
