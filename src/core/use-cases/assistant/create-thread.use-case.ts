@@ -1,0 +1,1 @@
+export const createThreadUseCase = async ( prompt: string ) => {};

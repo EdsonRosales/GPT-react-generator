@@ -1,10 +1,18 @@
+// ORTHOGRAPHY
+export * from './orthography/orthography.use-case';
 
-export * from './orthography.use-case';
-export * from './pros-cons.use-case';
-export * from './pros-cons-stream.use-case';
-export * from './pros-cons-stream-function-generator.use-case';
-export * from './translate-text.use-case';
-export * from './text-to-audio.use-case';
-export * from './audio-to-text.use-case';
-export * from './image-genertion.use-case';
-export * from './image-variation.use-case';
+// PROS CONS
+export * from './pros-cons/pros-cons.use-case';
+export * from './pros-cons/pros-cons-stream.use-case';
+export * from './pros-cons/pros-cons-stream-function-generator.use-case';
+
+// TRANSLATE
+export * from './translate/translate-text.use-case';
+
+// AUDIO
+export * from './audio-text/text-to-audio.use-case';
+export * from './audio-text/audio-to-text.use-case';
+
+// IMAGES
+export * from './image-generation/image-genertion.use-case';
+export * from './image-generation/image-variation.use-case';
