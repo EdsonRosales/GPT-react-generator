@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
-import { createThreadUseCase } from "../../../core/use-cases";
+import { askQuestionUseCase, createThreadUseCase } from "../../../core/use-cases";
 
 export type Message = {
   text: string;
@@ -35,14 +35,17 @@ export const AssistantPage = () => {
   }, [threadId]);
   
   const handlePost = async (text: string) => {
+    if (!threadId) return;
+
     setIsLoading(true);
     setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
 
-    // TO DO: Call to the matching Use Case
+    // Call to the matching Use Case
+    const replies = await askQuestionUseCase(threadId, text);
     
+    // Add the isGPTMessage in true
     setIsLoading(false);
-
-    // TO DO: Add the isGPTMessage in true
+    
   };
   
   return (

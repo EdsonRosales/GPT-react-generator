@@ -19,3 +19,4 @@ export * from './image-generation/image-variation.use-case';
 
 // ASSISTANT
 export * from './assistant/create-thread.use-case';
+export * from './assistant/ask-question.use-case';
