@@ -16,3 +16,6 @@ export * from './audio-text/audio-to-text.use-case';
 // IMAGES
 export * from './image-generation/image-genertion.use-case';
 export * from './image-generation/image-variation.use-case';
+
+// ASSISTANT
+export * from './assistant/create-thread.use-case';

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
+import { createThreadUseCase } from "../../../core/use-cases";
 
 export type Message = {
   text: string;
@@ -11,6 +12,28 @@ export const AssistantPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const [threadId, setThreadId] = useState<string>();
+
+  // Get the thread and if it not exists, create a new one
+  useEffect(() => {
+    const threadId = localStorage.getItem('threadId');
+    if (threadId) {
+      setThreadId(threadId);
+    } else {
+      createThreadUseCase()
+      .then( (id) => {
+        setThreadId(id);
+        localStorage.setItem('threadId', id);
+      })
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (threadId) {
+      setMessages( (prev) => [...prev, { text: `Número de thread: ${threadId}`, isGptMessage: true }] );
+    }
+  }, [threadId]);
+  
   const handlePost = async (text: string) => {
     setIsLoading(true);
     setMessages( (prev) => [...prev, { text, isGptMessage: false }] );
