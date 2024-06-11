@@ -43,9 +43,14 @@ export const AssistantPage = () => {
     // Call to the matching Use Case
     const replies = await askQuestionUseCase(threadId, text);
     
-    // Add the isGPTMessage in true
     setIsLoading(false);
     
+    // Add the isGPTMessage
+    for (const reply of replies) {
+      for (const message of reply.content) {
+        setMessages( (prev) => [...prev, { text: message, isGptMessage: (reply.role === 'assistant'), info: reply }] );
+      }
+    }
   };
   
   return (
